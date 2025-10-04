@@ -2,26 +2,150 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    /* Background & Text */
+    --background: 45 20% 8%; /* coklat gelap kehitaman */
+    --foreground: 50 20% 98%; /* teks terang */
+
+    /* Card & Popover */
+    --card: 45 18% 12%;
+    --card-foreground: 50 20% 95%;
+    --popover: 45 18% 12%;
+    --popover-foreground: 50 20% 95%;
+
+    /* Primary - Electric Yellow/Gold */
+    --primary: 45 95% 55%; /* kuning elektrik */
+    --primary-foreground: 45 20% 10%; /* teks gelap untuk kontras */
+
+    /* Secondary - Deep Orange-Yellow */
+    --secondary: 40 45% 20%; /* orange-yellow gelap */
+    --secondary-foreground: 45 90% 85%;
+
+    /* Muted - Dark Gray-Brown */
+    --muted: 40 15% 15%;
+    --muted-foreground: 45 10% 65%;
+
+    /* Accent - Bright Orange untuk highlight gaming */
+    --accent: 35 90% 55%; /* orange terang */
+    --accent-foreground: 40 20% 10%;
+
+    /* Destructive */
+    --destructive: 0 80% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Border & Input */
+    --border: 45 25% 25%;
+    --input: 45 20% 20%;
+    --ring: 45 95% 55%;
+
+    /* Chart Colors - Gaming Yellow Palette */
+    --chart-1: 45 95% 55%; /* electric yellow */
+    --chart-2: 35 90% 55%; /* orange */
+    --chart-3: 50 85% 60%; /* lime-yellow */
+    --chart-4: 40 95% 50%; /* gold */
+    --chart-5: 30 80% 55%; /* amber */
+
+    /* Radius */
+    --radius: 0.75rem;
+
+    /* Slice Black (untuk shadow/gradient) */
+    --slice: 40 30% 5%; /* hitam kecoklatan */
+
+    /* Gaming Extras */
+    --neon-glow: 45 100% 50%; /* neon yellow untuk glow effect */
+    --success: 150 80% 45%; /* hijau untuk success state */
+    --warning: 45 95% 55%; /* kuning untuk warning */
+  }
+}
+* {
+  @apply border-border outline-ring/50;
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .product-thumbnail-container {
+    perspective: 25em;
+  }
+  .product-thumbnail-container img {
+    transform: rotateY(15deg) rotateX(-5deg);
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+  }
+  .content {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0.875rem 0.875rem 1px;
+    overflow-x: visible;
+  }
+  .container {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #001435;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #5fb3f7; /* Updated dengan primary color baru */
+    border-radius: 6px;
+    border: 2px solid #001435;
+  }
+
+  /* Firefox */
+  .custom-scrollbar {
+    scrollbar-color: #5fb3f7 #001435; /* Updated dengan primary color baru */
+    scrollbar-width: thin;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+body {
+  font-family: "Poppins", sans-serif;
+  @apply bg-background text-foreground;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
