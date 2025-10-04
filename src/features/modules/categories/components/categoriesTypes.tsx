@@ -47,7 +47,7 @@ export function CategoriesChoices() {
         </div>
 
         {/* Category Pills */}
-        <div className="flex flex-wrap gap-3">
+        <div className="flex justify-center gap-3">
           {data?.data.map((category) => {
             const isActive = category === stateCategory;
             return (

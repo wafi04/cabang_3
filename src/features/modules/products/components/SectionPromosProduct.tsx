@@ -1,9 +1,12 @@
 "use client";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { ProductReseller } from "@/features/types/products";
 import { FormatCurrency } from "@/utils/format";
-import { Flame } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import Marquee from "react-fast-marquee";
 import { useGetPromos } from "../api";
 
 // ========================================
@@ -11,7 +14,7 @@ import { useGetPromos } from "../api";
 // ========================================
 function PromoCardSkeleton() {
   return (
-    <div className="flex-shrink-0 w-72 animate-pulse">
+    <div className="flex-shrink-0 w-72 mx-3 animate-pulse">
       <div className="relative rounded-xl overflow-hidden border border-border bg-card h-full">
         <div className="aspect-video bg-secondary relative" />
         <div className="p-4 space-y-3">
@@ -36,75 +39,56 @@ function PromoCard({ promo }: { promo: ProductReseller }) {
   const discountPercentage = Math.round(
     ((normalPrice - promoPrice) / normalPrice) * 100
   );
-  const savingsAmount = normalPrice - promoPrice;
-
+  const sanitizeBrand = promo.brand.replace(/\s+/g, "-").toLowerCase();
   return (
     <Link
-      href={`/order/${promo.brand?.toLowerCase().replace(/\s+/g, "-") || ""}`}
-      className="flex-shrink-0 w-72 group block"
+      href={`/order/${sanitizeBrand}`}
+      key={promo.id}
+      className="mx-4 hover:border-accent"
     >
-      <div className="relative rounded-xl overflow-hidden border border-border hover:border-primary transition-all duration-300 hover:shadow-xl bg-card h-full transform hover:-translate-y-1">
-        {/* Image Container */}
-        <div className="aspect-video bg-secondary relative overflow-hidden">
-          {promo.categoryThumbnail ? (
-            <Image
-              width={400}
-              height={225}
-              src={promo.categoryThumbnail}
-              alt={promo.productName}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              loading="lazy"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-primary/10 to-secondary/10">
-              🎮
+      <Card className="w-[320px] overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+        <CardContent className="p-3">
+          <div className="flex gap-3">
+            {/* Image Section - Small on Left */}
+            <div className="relative flex-shrink-0">
+              <Image
+                width={100}
+                height={100}
+                src={promo.categoryThumbnail}
+                alt={promo.categoryName}
+                className="w-20 h-20 object-cover rounded-md"
+              />
+              <Badge className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5">
+                -{discountPercentage}%
+              </Badge>
             </div>
-          )}
 
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            {/* Content Section - Right Side */}
+            <div className="flex-1 space-y-2">
+              <p className="font-medium text-sm line-clamp-2 leading-tight">
+                {promo.productName}
+              </p>
 
-          {/* Discount Badge */}
-          <div className="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-orange-500 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
-            <Flame className="h-4 w-4" />
-            {discountPercentage}% OFF
-          </div>
-
-          {/* Category Badge */}
-          <div className="absolute bottom-3 left-3 bg-background/95 backdrop-blur-sm text-foreground text-xs font-medium px-3 py-1.5 rounded-full border border-border">
-            {promo.categoryName}
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-4 space-y-3">
-          <h3 className="font-semibold text-base line-clamp-2 group-hover:text-primary transition-colors leading-tight">
-            {promo.productName}
-          </h3>
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground line-through">
-                {FormatCurrency(normalPrice)}
-              </span>
-              <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium px-2 py-1 rounded-md">
-                Hemat {FormatCurrency(savingsAmount)}
-              </span>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-primary">
-                {FormatCurrency(promoPrice)}
-              </span>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-base font-bold text-red-500">
+                    {FormatCurrency(promo.hargaPromo)}
+                  </span>
+                  <span className="line-through text-xs text-muted-foreground">
+                    {FormatCurrency(promo.hargaJual)}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </Link>
   );
 }
 
 // ========================================
-// MAIN COMPONENT
+// MAIN COMPONENT with React Fast Marquee
 // ========================================
 export function SectionPromosProduct() {
   const { data, isLoading } = useGetPromos({ limit: "100", page: "1" });
@@ -112,11 +96,8 @@ export function SectionPromosProduct() {
 
   if (!isLoading && (!promos || promos.length === 0)) return null;
 
-  // Duplicate promos for seamless loop
-  const duplicatedPromos = [...promos, ...promos];
-
   return (
-    <section className="relative overflow-hidden px-4 py-8">
+    <section className="relative overflow-hidden py-12 ">
       <div className="container mx-auto">
         {/* Header */}
         <div className="mb-8 text-center">
@@ -133,42 +114,26 @@ export function SectionPromosProduct() {
         </div>
 
         {/* Marquee Container */}
-        <div className="relative">
-          <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]">
-            {isLoading ? (
-              <div className="flex gap-6 animate-marquee">
-                {Array.from({ length: 8 }, (_, i) => (
-                  <PromoCardSkeleton key={i} />
-                ))}
-              </div>
-            ) : (
-              <div className="flex gap-6 animate-marquee hover:[animation-play-state:paused]">
-                {duplicatedPromos.map((promo, index) => (
-                  <PromoCard
-                    key={`${promo.productName}-${index}`}
-                    promo={promo}
-                  />
-                ))}
-              </div>
-            )}
+        {isLoading ? (
+          <div className="flex gap-6 overflow-hidden">
+            {Array.from({ length: 6 }, (_, i) => (
+              <PromoCardSkeleton key={i} />
+            ))}
           </div>
-        </div>
+        ) : (
+          <Marquee
+            pauseOnHover={true}
+            speed={40}
+            gradient={true}
+            gradientColor="hsl(var(--background))"
+            gradientWidth={100}
+          >
+            {promos.map((promo, index) => (
+              <PromoCard key={`${promo.productName}-${index}`} promo={promo} />
+            ))}
+          </Marquee>
+        )}
       </div>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0%);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-        }
-      `}</style>
     </section>
   );
 }

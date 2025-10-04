@@ -2,6 +2,7 @@
 import { useGetAllCategory } from "../api";
 import Link from "next/link";
 import Image from "next/image";
+import { useFilterMain } from "../hooks";
 
 export function SectionCategory() {
   return (
@@ -12,7 +13,12 @@ export function SectionCategory() {
 }
 
 export function CardCategory() {
-  const { data } = useGetAllCategory();
+const {category}  = useFilterMain()
+  const { data } = useGetAllCategory({
+    brand : category,
+    limit : "100",
+    page : "1"
+  });
 
   const subcategories = data?.data.data || [];
 

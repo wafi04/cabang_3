@@ -2,20 +2,25 @@ import { useOrder } from "@/features/hooks/useFormOrder";
 import { ProductReseller } from "@/features/types/products";
 import { FormatCurrency } from "@/utils/format";
 import { toast } from "react-hot-toast";
+import { HeaderFieldOrder } from "../../transactions/components/order/HeaderFieldOrder";
 
-export function ProductsOrder({ products }: { products: ProductReseller[] }) {
+interface ProductsOrderProps {
+  products: ProductReseller[];
+  onSelect?: () => void;
+}
+
+export function ProductsOrder({ products, onSelect }: ProductsOrderProps) {
   const calculateDiscount = (originalPrice: number, promoPrice: number) => {
     const discount = ((originalPrice - promoPrice) / originalPrice) * 100;
     return Math.round(discount);
   };
-  const { setSelectedProduct, orderSummary, formData } = useOrder();
+  const { setSelectedProduct, formData } = useOrder();
 
   return (
-    <div className="space-y-3 bg-card p-4 rounded-lg border border-border">
-      <h2 className="text-lg font-semibold text-foreground mb-4">
-        Pilih Nominal
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="space-y-3 bg-card rounded-lg border border-border">
+      <HeaderFieldOrder id={2} subName="Pilih Produk" />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 p-4 gap-4">
         {products.map((product) => {
           const hasPromo = product.hargaPromo && product.hargaPromo > 0;
           const discountPercentage = hasPromo
@@ -29,6 +34,9 @@ export function ProductsOrder({ products }: { products: ProductReseller[] }) {
                 if (!formData?.gameId || formData.gameId === "") {
                   toast.error("Masukkan Akun Terlebih Dahulu");
                   return;
+                }
+                if (onSelect) {
+                  onSelect();
                 }
                 setSelectedProduct({
                   id: product.id,

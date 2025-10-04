@@ -15,7 +15,7 @@ export interface PaymentMethod {
     percentage: number;
     type: "fixed" | "percentage" | "hybrid";
   };
-  total: number; // calculated: price + fee
+  total: number;
   icon?: string;
   isActive?: boolean;
 }
@@ -24,6 +24,8 @@ interface FormData {
   gameId: string;
   serverId?: string;
   nickname?: string;
+  email?: string;
+  phoneNumber: string;
 }
 
 interface OrderCalculation {
@@ -61,9 +63,12 @@ export const useOrderStore = create<OrderStore>((set, get) => ({
     gameId: "",
     serverId: "",
     nickname: "",
+    phoneNumber: "",
+    email: "",
   },
   selectedProduct: null,
   selectedMethod: null,
+
   errors: {},
 
   // Actions
@@ -113,6 +118,8 @@ export const useOrderStore = create<OrderStore>((set, get) => ({
   clearForm: () =>
     set({
       formData: {
+        phoneNumber: "",
+        email: "",
         gameId: "",
         serverId: "",
         nickname: "",
@@ -129,6 +136,9 @@ export const useOrderStore = create<OrderStore>((set, get) => ({
     if (!formData.gameId?.trim()) {
       newErrors.gameId = "Game ID wajib diisi";
     }
+    if (!formData.phoneNumber?.trim()) {
+      newErrors.phoneNumber = "Masukaan Nomor Handphonenya terlebih Dahulu";
+    }
 
     if (!selectedProduct) {
       newErrors.product = "Pilih produk terlebih dahulu";
@@ -138,7 +148,6 @@ export const useOrderStore = create<OrderStore>((set, get) => ({
       newErrors.paymentMethod = "Pilih metode pembayaran";
     }
 
-    // Only update errors if they actually changed
     const currentErrors = get().errors;
     const errorsChanged =
       JSON.stringify(newErrors) !== JSON.stringify(currentErrors);

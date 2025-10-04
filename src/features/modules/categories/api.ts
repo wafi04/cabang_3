@@ -12,6 +12,7 @@ export function useGetAllCategory(filters?: FilterRequest) {
       if (filters?.limit) params.append("limit", filters.limit);
       if (filters?.page) params.append("page", filters.page);
       if (filters?.search) params.append("search", filters.search);
+      if (filters?.brand) params.append("brand", filters.brand);
       const data = await api.get<ApiPagination<Category[]>>(
         `/categories?${params.toString()}`
       );

@@ -9,6 +9,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useAuthQuery } from "@/features/hooks/useAuthQuery";
+import { useDebounce } from "@/features/hooks/useDebounce";
+import { AuthenticationLayout } from "@/features/layouts/authenticationLayout";
+import { useGettransactionsResellerUser } from "@/features/modules/transactions/api";
+import { formatDate } from "@/utils/format";
 import {
   Activity,
   Calendar,
@@ -19,14 +24,9 @@ import {
   User,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { TableTransactionsUser } from "./table";
-import { useAuthQuery } from "@/features/hooks/useAuthQuery";
-import { useDebounce } from "@/features/hooks/useDebounce";
-import { AuthenticationLayout } from "@/features/layouts/authenticationLayout";
-import { formatDate } from "@/utils/format";
+import { useState } from "react";
 import { PaginationComponents } from "../dashboard/_components/PaginationComponents";
-import { useGettransactionsResellerUser } from "@/features/modules/transactions/api";
+import { TableTransactionsUser } from "./table";
 
 export default function ProfilePage() {
   const { data: user } = useAuthQuery();
@@ -35,7 +35,7 @@ export default function ProfilePage() {
 
   const debouncedSearch = useDebounce(search, 400);
   const userData = user?.data;
-  const { data, isLoading, error } = useGettransactionsResellerUser({
+  const { data } = useGettransactionsResellerUser({
     filters: {
       limit: "10",
       page: currentPage.toString(),

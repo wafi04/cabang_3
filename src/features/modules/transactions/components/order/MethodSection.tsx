@@ -8,6 +8,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { HeaderFieldOrder } from "./HeaderFieldOrder";
 
 export function MethodSection() {
   const { data } = useGetMethodByType();
@@ -62,13 +63,11 @@ export function MethodSection() {
   return (
     <section
       id="method-section"
-      className="relative scroll-mt-20 rounded-xl bg-card border p-4 shadow-sm md:scroll-mt-[7.5rem]"
+      className="relative scroll-mt-20 rounded-xl bg-card border shadow-sm md:scroll-mt-[7.5rem]"
     >
-      <h3 className="text-xl font-semibold text-foreground mb-4">
-        Pilih Metode Pembayaran
-      </h3>
+      <HeaderFieldOrder id={3} subName="Pilih Metode Pembayaran" />
 
-      <div className="space-y-3">
+      <div className="space-y-3 p-4">
         {data.data.map((group) => (
           <div
             key={group.type}

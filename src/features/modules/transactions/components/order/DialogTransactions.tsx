@@ -31,7 +31,7 @@ export function DialogValidateTransactions({
   const { calculation, getOrderSummary } = useOrder();
 
   useEffect(() => {
-    if (isOpen && transactionData?.status === "SUCCESS") {
+    if (isOpen && transactionData?.status === "pending") {
       const timer = setTimeout(() => {
         createConfetti();
       }, 300);

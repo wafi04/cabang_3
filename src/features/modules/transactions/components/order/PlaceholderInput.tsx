@@ -6,6 +6,7 @@ import { useGetFormFields } from "@/features/hooks/useGetFormFields";
 import { useOrderStore } from "@/features/hooks/useOrder";
 import { useDebounce } from "@/features/hooks/useDebounce";
 import { CheckNickName } from "@/features/hooks/useCheckNickname";
+import { HeaderFieldOrder } from "./HeaderFieldOrder";
 
 interface PlaceHolderInputProps {
   brand: string;
@@ -24,7 +25,6 @@ export function PlaceHolderInput({
   const { setFormData, errors, formData } = useOrderStore();
   const [isChecking, setIsChecking] = useState(false);
 
-  // Debounce formData untuk menghindari API call yang terlalu sering
   const debouncedOrderData = useDebounce(formData, 500);
 
   const handleInputChange = (field: string, value: string) => {
@@ -50,22 +50,20 @@ export function PlaceHolderInput({
         setIsChecking(true);
         try {
           const check = await CheckNickName({
-            gameId: debouncedOrderData.gameId,
+            userId: debouncedOrderData.gameId,
             type: brand,
             serverId: debouncedOrderData.serverId,
           });
 
           if (check.name) {
-            // Update form data dengan nickname yang ditemukan
             setFormData({
               ...debouncedOrderData,
-              nickname: check.name, // atau field name yang sesuai
+              nickname: check.name,
             });
           } else {
             toast.error("Nickname tidak ditemukan");
           }
         } catch (error) {
-          console.error("Error checking nickname:", error);
           toast.error("Gagal memverifikasi nickname");
         } finally {
           setIsChecking(false);
@@ -118,20 +116,10 @@ export function PlaceHolderInput({
   }`;
 
   return (
-    <div className="py-4 bg-card px-4 rounded-lg border border-border">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-foreground">
-          Masukkan Tujuan
-        </h2>
-        {isChecking && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
-            <span>Memverifikasi...</span>
-          </div>
-        )}
-      </div>
+    <div className="bg-cardrounded-lg border rounded-xl border-border">
+      <HeaderFieldOrder id={1} subName="Masukkan Detail Akun" />
 
-      <div className={gridClass}>
+      <div className={`${gridClass} p-4`}>
         {data.data
           .sort((a, b) => a.fieldOrder - b.fieldOrder)
           .map((field) => {
